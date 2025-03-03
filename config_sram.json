@@ -1,0 +1,51 @@
+{
+    "DESIGN_NAME": "sram_wrap",
+    "VERILOG_FILES": [ "dir::rtl/sram_wrap.sv", "dir::rtl/sky130_sram_2kbyte_1rw1r_32x512_8.v"],
+    "EXTRA_VERILOG_MODELS": [ "dir::rtl/sky130_sram_2kbyte_1rw1r_32x512_8.v"],
+    "CLOCK_PORT": "clk_i",
+    "CLOCK_PERIOD": 8,
+    "pdk::sky130A": {
+      "MAX_FANOUT_CONSTRAINT": 6,
+      "FP_CORE_UTIL": 40,
+      "PL_TARGET_DENSITY_PCT": "expr::($FP_CORE_UTIL + 10.0)",
+      "scl::sky130_fd_sc_hd": {
+        "CLOCK_PERIOD": 8.0
+      }
+    },
+
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [0, 0, 2920, 3520],
+
+    "VDD_NETS": [
+      "vccd1"
+  ],
+    "GND_NETS": [
+        "vssd1"
+    ],
+
+    "MACROS": {
+      "sky130_sram_2kbyte_1rw1r_32x512_8": {
+          "instances": {
+          "sram0": {
+              "location": [1000, 2000],
+              "orientation": "N"
+          }
+        },
+          "gds": [
+              "dir::macros/sky130_sram_macros/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.gds"
+          ],
+          "lef": [
+              "dir::macros/sky130_sram_macros/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.lef"
+          ],
+          "spef": {
+              "*": [
+                "dir::macros/sky130_sram_macros/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.sp"
+              ]
+          },
+          "lib": {
+              "*": "dir::macros/sky130_sram_macros/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
+          }
+      }
+     },
+     "PDN_MACRO_CONNECTIONS": ["sram0 vccd1 vssd1 vccd1 vssd1"]
+  }

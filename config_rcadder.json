@@ -1,0 +1,13 @@
+{
+  "DESIGN_NAME": "rcAdder",
+  "FP_PDN_MULTILAYER": false,
+  "FP_PDN_CORE_RING": true,
+  "FP_PDN_VERTICAL_LAYER": "met2",
+  "FP_PDN_HORIZONTAL_LAYER": "met3",
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 25,
+  "VERILOG_FILES": [
+      "dir::rtl/rcAdder.sv", "dir::rtl/fullAdder.sv"
+  ],
+  "FP_CORE_UTIL": 40
+  }
