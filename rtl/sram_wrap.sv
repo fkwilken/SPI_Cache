@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 //////////////////////////////////////////////////////////////////////////////////
 //
 // Module Name: sram_wrap
@@ -14,8 +15,8 @@ module sram_wrap #(
     parameter SRAM_NUM_BLOCKS     = 2,
     parameter SRAM_BLOCK_SIZE     = 512,
     parameter SRAM_LOG_BLOCK_SIZE = $clog2(SRAM_BLOCK_SIZE),
-    parameter SRAM_END_ADDR       = (SRAM_BASE_ADDR + (SRAM_NUM_BLOCKS * SRAM_BLOCK_SIZE)),
-    parameter SRAM_LOG_BLOCKS     = $clog2(SRAM_NUM_BLOCKS) )
+    parameter SRAM_END_ADDR       = (SRAM_BASE_ADDR + (SRAM_NUM_BLOCKS * SRAM_BLOCK_SIZE))
+)
 (
 `ifdef USE_POWER_PINS
     inout vccd1,	// 1.8V supply
@@ -46,6 +47,9 @@ module sram_wrap #(
     //illegal out
     output logic        illegal_memory_o                       
 );
+
+    localparam SRAM_LOG            = $clog2(SRAM_NUM_BLOCKS);
+    localparam SRAM_LOG_BLOCKS     = (SRAM_LOG > 1) ? SRAM_LOG : 1 ;
 
     //internal signals for OBI
     wire  [31:0] sram_d_read_vec [SRAM_NUM_BLOCKS - 1 : 0 ];

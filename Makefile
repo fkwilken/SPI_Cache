@@ -21,9 +21,10 @@ SIMULATOR_SRCS := *.sv
 # Optional use of Icarus as Linter and Simulator
 ifdef ICARUS
 SIMULATOR := iverilog
-SIMULATOR_ARGS := -g2012 
+SIMULATOR_ARGS := -g2012
 SIMULATOR_BINARY := a.out
 SIMULATOR_SRCS := $(foreach src, $(RTL_SRCS), $(realpath $(src))) *.sv
+LINT_INCLUDES := ""
 endif
 # Gate Level Verification
 ifdef GL

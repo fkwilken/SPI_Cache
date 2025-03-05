@@ -7,7 +7,7 @@ module macroAdder #(parameter WIDTH=16) (
     input clk,
     input [WIDTH-1:0] in,
     output logic [WIDTH*2-1:0] out,
-    output carry_o
+    output logic carry_o
 );
 
 logic [1:0] carries;

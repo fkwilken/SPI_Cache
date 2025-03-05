@@ -1,5 +1,4 @@
-
-module tb_fib;
+module tb_sram;
 
 `ifdef USE_POWER_PINS
     wire VPWR;
@@ -40,7 +39,7 @@ sram_wrap sram_wrap (
     .*                  
 );
 
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 always begin
     #(CLK_PERIOD/2) 
     clk_i<=~clk_i;
@@ -48,14 +47,15 @@ end
 
 initial begin
     $dumpfile("tb_sram.vcd");
-    $dumpvars(0, tb_fib);
+    $dumpvars(0, tb_sram);
 end
 
 initial begin
     #1 clk_i=1'b0;
     sram_d_req_i = 0;
 
-    @(posedge clk_i);
+    repeat(2) @(posedge clk_i);
+    #1;
 
     sram_d_addr_i = 32'hC;
     sram_d_wdata_i = 69;
@@ -63,14 +63,20 @@ initial begin
     sram_d_be_i = 4'hF;
     sram_d_req_i = 1;
 
-    repeat(2) @(posedge clk_i);
+    repeat(1) @(posedge clk_i);
+    #1;
+
     
     sram_d_we_i = 0;
+    @(posedge clk_i);
+    #1;
+    
     sram_d_req_i = 1;
 
-    @(posedge clk_i);
+    repeat (1) @(posedge clk_i);
+    #1;
 
-    assert(sram_d_rdata_o == 69);    
+    assert(sram_d_rdata_o == 69) else $error("Read Fail");    
     
     $finish(2);
 end
