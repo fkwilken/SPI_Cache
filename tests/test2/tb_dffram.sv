@@ -16,7 +16,14 @@ logic                   EN0;     // FO: 2
 logic   [7:0]           A0;      // FO: 5
 logic   [(WSIZE*8-1):0] Di0;     // FO: 2
 logic  [(WSIZE*8-1):0]  Do0;
+
+`ifdef VERILATOR
+// Use Model for Verilator
+RAM256model #(1, WSIZE ) ram16x256 (.CLK(clk), .*);
+`else
+// Use GL Model for Iverilog
 RAM256 #(1, WSIZE ) ram16x256 (.CLK(clk), .*);
+`endif
 
 localparam CLK_PERIOD = 20;
 always begin
@@ -43,6 +50,7 @@ task readDFFRAM (bit [7:0] addr);
     EN0 = 1;
     WE0 = 0;
     @(posedge clk);   
+    @(negedge clk);  
 endtask
 
 initial begin
@@ -51,10 +59,15 @@ initial begin
     A0 = 0;
 
     @(posedge clk);
-    for (int i = 0; i < 256; i++) begin
-        writeDFFRAM(i, i);
-        readDFFRAM(i);
+    for (bit [15:0] i = 0; i < 256; i++) begin
+        writeDFFRAM(i[7:0], i);
+    end
+
+    @(posedge clk);
+    for (bit [15:0] i = 0; i < 256; i++) begin
+        readDFFRAM(i[7:0]);
         assert(Do0 == i) else $error("Didnt Match at %d", i);
+        @(posedge clk);
     end
 
 
