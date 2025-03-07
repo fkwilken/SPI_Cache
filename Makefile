@@ -110,6 +110,13 @@ $(TESTS):
 			cat results.log; \
 		fi; \
 
+COCOTEST_DIR = ./cocotests
+COCOTEST_SUBDIRS = $(shell cd $(COCOTEST_DIR) && ls -d */ | grep -v "__pycache__" )
+COCOTESTS = $(COCOTEST_SUBDIRS:/=)
+.PHONY: cocotests
+cocotests:
+	@$(foreach test,  $(COCOTESTS), make -sC $(COCOTEST_DIR)/$(test);)
+
 OPENLANE_CONF ?= config.*
 openlane:
 	@`which openlane` --flow Classic $(OPENLANE_CONF)
@@ -130,3 +137,7 @@ clean:
 	rm -f `find tests -iname "a.out"`
 	rm -f `find tests -iname "*.log"`
 	rm -rf `find tests -iname "obj_dir"`
+
+.PHONY: VERILOG_SOURCES
+VERILOG_SOURCES: 
+	@echo $(realpath $(RTL_SRCS))
