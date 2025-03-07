@@ -24,7 +24,7 @@ SIMULATOR := iverilog
 SIMULATOR_ARGS := -g2012
 SIMULATOR_BINARY := a.out
 SIMULATOR_SRCS := $(foreach src, $(RTL_SRCS), $(realpath $(src))) *.sv
-LINT_INCLUDES := ""
+# LINT_INCLUDES := ""
 endif
 # Gate Level Verification
 ifdef GL
