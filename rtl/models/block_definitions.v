@@ -18,10 +18,9 @@
 */
 
 `define UNIT_DELAY #1
-// `define USE_POWER_PINS
 `define FUNCTIONAL
-`include "/foss/pdks/sky130A/libs.ref/sky130_fd_sc_hd/verilog/primitives.v"
-`include "/foss/pdks/sky130A/libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v"
+`include "libs.ref/sky130_fd_sc_hd/verilog/primitives.v"
+`include "libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v"
 
 // Add 1x2 binary decoder
 `default_nettype none

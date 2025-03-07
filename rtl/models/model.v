@@ -396,7 +396,7 @@ module RAM128_1RW1R #( parameter    USE_LATCH=1,
 endmodule
 
 module RAM256 #(parameter   USE_LATCH=1,
-                            WSIZE=1 ) 
+                            WSIZE=2 ) 
 (
     input   wire                CLK,    // FO: 2
     input   wire [WSIZE-1:0]     WE0,     // FO: 2
