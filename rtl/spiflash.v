@@ -44,7 +44,7 @@ module spiflash (
     inout io2,
     inout io3
 );
-  localparam logic verbose = 0;
+  localparam verbose = 0;
   localparam integer latency = 8;
 
   reg [7:0] buffer;
@@ -62,13 +62,13 @@ module spiflash (
 
   reg powered_up = 0;
 
-  localparam logic [3:0] mode_spi = 1;
-  localparam logic [3:0] mode_dspi_rd = 2;
-  localparam logic [3:0] mode_dspi_wr = 3;
-  localparam logic [3:0] mode_qspi_rd = 4;
-  localparam logic [3:0] mode_qspi_wr = 5;
-  localparam logic [3:0] mode_qspi_ddr_rd = 6;
-  localparam logic [3:0] mode_qspi_ddr_wr = 7;
+  localparam [3:0] mode_spi = 1;
+  localparam [3:0] mode_dspi_rd = 2;
+  localparam [3:0] mode_dspi_wr = 3;
+  localparam [3:0] mode_qspi_rd = 4;
+  localparam [3:0] mode_qspi_wr = 5;
+  localparam [3:0] mode_qspi_ddr_rd = 6;
+  localparam [3:0] mode_qspi_ddr_wr = 7;
 
   reg [3:0] mode = 0;
   reg [3:0] next_mode = 0;
@@ -83,10 +83,10 @@ module spiflash (
   reg io2_dout = 0;
   reg io3_dout = 0;
 
-  assign #1 io0 = io0_oe ? io0_dout : 1'bz;
-  assign #1 io1 = io1_oe ? io1_dout : 1'bz;
-  assign #1 io2 = io2_oe ? io2_dout : 1'bz;
-  assign #1 io3 = io3_oe ? io3_dout : 1'bz;
+  assign io0 = io0_oe ? io0_dout : 1'bz;
+  assign io1 = io1_oe ? io1_dout : 1'bz;
+  assign io2 = io2_oe ? io2_dout : 1'bz;
+  assign io3 = io3_oe ? io3_dout : 1'bz;
 
   wire io0_delayed;
   wire io1_delayed;
