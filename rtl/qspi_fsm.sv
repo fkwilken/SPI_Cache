@@ -1,96 +1,144 @@
 `include "qspi_interface.svh"
 
 module qspi_fsm (
-    input  logic clk,
-    input  logic rst,
-    input  logic cmd_done,
-    input  logic cnt_done,
+    input logic clk,
+    input logic rst,
+    input logic cmd_done,
+    input logic cmd_last_cycle,
+    input logic cnt_done,
+    input logic start_read,
+    input logic addr_done,
     output cmd_t cmd_out,
     output logic cmd_we,
-    output logic reading,
     output logic cs,
-    output logic rready
+    output logic rready,
+    output logic addr_shift,
+    output logic data_shift,
+    output logic [7:0] cnt_val,
+    output logic cnt_we,
+    output logic [1:0] out_mux  // 0: High-Z
+                                // 1: Cmd Register
+                                // 2: Addr Register
 );
   typedef enum {
-    StartReset,
-    StartPowerUp,
+    Init,
+    Reset,
+    PowerUp,
     Idle,
-    StartRead
-  } state_t;
+    ReadCmd,
+    ReadAddr,
+    ReadDelay,
+    ReadData
+  } state_e;
 
-  state_t curr_state;
-  state_t next_state;
+  state_e curr_state;
+  state_e next_state;
 
   always_ff @(posedge clk) begin
     if (rst) begin
-      curr_state <= StartReset;
+      curr_state <= Init;
     end else begin
       curr_state <= next_state;
     end
   end
 
   always_comb begin
-    we = 0;
-    cmd_out = 0;
-    reading = 0;
+    cmd_out = CmdReset;
+    cmd_we = 0;
+    cs = 1;
     rready = 0;
-    cs = 0;
+    addr_shift = 0;
+    data_shift = 0;
+    cnt_we = 0;
+    cnt_val = 0;
+    out_mux = 0;
+
     case (curr_state)
-      StartReset: begin
-        cmd_out = Reset;
-        we = 1;
+      Init: begin
+        cmd_out = CmdReset;
+        cmd_we = 1;
         next_state = Reset;
       end
 
       Reset: begin
-        cs = 1;
+        out_mux = 1;
+        cmd_out = CmdPowerUp;
         if (cmd_done) begin
-          next_state = StartPowerUp;
+          next_state = PowerUp;
+          cs = 1;
+          cmd_we = 1;
         end else begin
           next_state = Reset;
+          cs = 0;
+          cmd_we = 0;
         end
       end
 
-      StartPowerUp: begin
-        cmd_out = PowerUp;
-        we = 1;
-        next_state = PowerUp;
-      end
-
       PowerUp: begin
-        cs = 1;
+        out_mux = 1;
         if (cmd_done) begin
           next_state = Idle;
         end else begin
           next_state = PowerUp;
+          cs = 0;
         end
       end
 
       Idle: begin
-        rready = 1;
-        if (we) begin
-          next_state = StartRead;
+        cmd_out = CmdRead;
+        rready  = 1;
+        if (start_read) begin
+          cmd_we = 1;
+          next_state = ReadCmd;
         end else begin
           next_state = Idle;
         end
       end
 
-      StartRead: begin
-        cmd_out = Read;
-        we = 1;
-        next_state = Read;
-        reading = 1;
+      ReadCmd: begin
+        out_mux = 1;
+        cs = 0;
+        if (cmd_last_cycle) begin
+          next_state = ReadAddr;
+        end else begin
+          next_state = ReadCmd;
+        end
       end
 
-      Read: begin
-        cs = 1;
-        reading = 1;
+      ReadAddr: begin
+        out_mux = 2;
+        addr_shift = 1;
+        cs = 0;
+        if (addr_done) begin
+          next_state = ReadDelay;
+          cnt_we = 1;
+        end else begin
+          next_state = ReadAddr;
+        end
+      end
+
+      ReadDelay: begin
+        cnt_val = 6;
+        cs = 0;
+        if (cnt_done) begin
+          next_state = ReadData;
+          cnt_we = 1;
+        end else begin
+          next_state = ReadDelay;
+        end
+      end
+
+      ReadData: begin
+        cs = 0;
+        cnt_val = 32;
         if (cnt_done) begin
           next_state = Idle;
         end else begin
-          next_state = Read;
+          next_state = ReadData;
+          data_shift = 1;
         end
       end
+
       default: begin
 
       end

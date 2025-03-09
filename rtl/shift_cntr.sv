@@ -10,27 +10,29 @@ module shift_cntr #(
     input logic we,  // write enable
     input logic se,  // shift enable
     output logic [OUT_SIZE-1:0] dout,
-    output logic done
+    output logic done,
+    output logic lst_cycle
 );
 
   logic [SIZE-1:0] int_reg;
-  logic [$clog2(SIZE)-1:0] int_cnt;
+  logic [$clog2(SIZE):0] int_cnt;
 
   always_ff @(posedge clk) begin
     if (rst) begin
       int_reg <= 0;
-      int_cnt <= 0;
+      int_cnt <= SIZE;
     end else if (we) begin
       int_reg <= din;
       int_cnt <= SIZE;
-    end else if (se) begin
+    end else if (se & !done) begin
       int_reg <= {int_reg[SIZE-OUT_SIZE-1:0], {OUT_SIZE{1'b0}}};
       int_cnt <= int_cnt - OUT_SIZE;
     end
   end
 
-  assign dout = int_reg[SIZE:-OUT_SIZE];
+  assign dout = int_reg[SIZE-1:SIZE-OUT_SIZE];
   assign done = int_cnt == 0;
+  assign lst_cycle = int_cnt == 1;
 
 
 endmodule
