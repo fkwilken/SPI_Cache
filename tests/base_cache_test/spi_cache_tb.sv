@@ -1,4 +1,5 @@
 module spi_cache_tb ();
+  logic [2:0] arprot;
   logic aclk;
   logic aresetn;
   logic arvalid;

@@ -90,7 +90,7 @@ module spi_cache (
       .A0(cache_addr),
       .Di0(qspi_dout),
       .Do0(rdata),
-      .WE0({1'b0, qspi_dval})
+      .WE0({qspi_dval, qspi_dval})
   );
 
   // Tag Cache Memory
@@ -100,7 +100,7 @@ module spi_cache (
       .A0(init_mode ? init_cntr : addr_cline),
       .Di0(tag_din),
       .Do0({cache_present, cache_tag}),
-      .WE0({1'b0, tag_wen | init_mode})
+      .WE0({tag_wen | init_mode , tag_wen | init_mode})
   );
 
   assign tag_din = init_mode ? 16'h0 : {1'b1, addr_tag};
