@@ -13,10 +13,10 @@ module dffram_wrap (
   output [15:0] Do0;
   input [1:0] WE0;
 
-  RAM256model dffram0 (
-      .CLK(clk_i),
-      .*
-  );
+`ifdef VERILATOR
+RAM256model dffram0 (.CLK(clk_i), .*);
+`else
+RAM256 dffram0 (.CLK(clk_i), .*);
+`endif
 
 endmodule
-

@@ -67,7 +67,6 @@ initial begin
     for (bit [15:0] i = 0; i < 256; i++) begin
         readDFFRAM(i[7:0]);
         assert(Do0 == i) else $error("Didnt Match at %d", i);
-        @(posedge clk);
     end
 
 

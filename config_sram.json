@@ -1,6 +1,6 @@
 {
     "DESIGN_NAME": "sram_wrap",
-    "VERILOG_FILES": [ "dir::rtl/sram_wrap.sv", "dir::rtl/sky130_sram_2kbyte_1rw1r_32x512_8.v"],
+    "VERILOG_FILES": [ "dir::rtl/sram_wrap.sv"],
     "EXTRA_VERILOG_MODELS": [ "dir::rtl/sky130_sram_2kbyte_1rw1r_32x512_8.v"],
     "CLOCK_PORT": "clk_i",
     "CLOCK_PERIOD": 8,
