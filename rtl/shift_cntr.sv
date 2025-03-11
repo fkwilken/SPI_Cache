@@ -13,20 +13,21 @@ module shift_cntr #(
     output logic done,
     output logic lst_cycle
 );
-
+  localparam LOG2SIZE = $clog2(SIZE);
+  
   logic [SIZE-1:0] int_reg;
-  logic [$clog2(SIZE):0] int_cnt;
+  logic [LOG2SIZE:0] int_cnt;
 
   always_ff @(posedge clk) begin
     if (rst) begin
       int_reg <= 0;
-      int_cnt <= SIZE;
+      int_cnt <= SIZE[LOG2SIZE:0];
     end else if (we) begin
       int_reg <= din;
-      int_cnt <= SIZE;
+      int_cnt <= SIZE[LOG2SIZE:0];
     end else if (se & !done) begin
       int_reg <= {int_reg[SIZE-OUT_SIZE-1:0], {OUT_SIZE{1'b0}}};
-      int_cnt <= int_cnt - OUT_SIZE;
+      int_cnt <= int_cnt - OUT_SIZE[LOG2SIZE:0];
     end
   end
 

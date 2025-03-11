@@ -61,6 +61,7 @@ module qspi_interface (
       .lst_cycle(cmd_last)
   );
 
+  logic _unused;
   shift_cntr #(
       .SIZE(32),
       .OUT_SIZE(4)
@@ -71,7 +72,8 @@ module qspi_interface (
       .we  (read_en),
       .se  (addr_se),
       .dout(addr_out),
-      .done(addr_done)
+      .done(addr_done),
+      .lst_cycle(_unused)
   );
 
   // timer

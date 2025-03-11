@@ -17,8 +17,8 @@
  *
  */
 
-// /*verilator lint_off WIDTHTRUNC*/
-// /*verilator lint_off CASEINCOMPLETE*/
+/*verilator lint_off WIDTH*/
+/*verilator lint_off CASEINCOMPLETE*/
 
 `timescale 1 ns / 1 ps
 

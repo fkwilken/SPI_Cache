@@ -1,4 +1,4 @@
-module dffram_wrap (
+module dffram256x16_wrap (
     clk_i,
     EN0,
     A0,

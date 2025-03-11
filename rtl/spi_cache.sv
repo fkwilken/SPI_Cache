@@ -19,31 +19,41 @@ module spi_cache (
     input logic qspi_rready
 );
 
-  logic [14:0] addr_tag;
-  logic [7:0] addr_cline;
+localparam CLINES = 256;
+localparam CLINEWORDS=4;
+localparam CLINEOFFSET=$clog2(CLINEWORDS);
+
+localparam TADDRSIZE = $clog2(CLINES);
+localparam CADDRSIZE = $clog2(CLINES*CLINEWORDS);
+localparam TAGSIZE = 15;
+
+localparam ADDRSPACE = CADDRSIZE + TAGSIZE + CLINEOFFSET;
+
+  logic [TAGSIZE-1:0] addr_tag;
+  logic [TADDRSIZE-1:0] addr_cline;
   logic [1:0] addr_woff;
 
   logic [31:0] cache_din;
   logic cache_wen;
-  logic [14:0] cache_tag;
+  logic [TAGSIZE-1:0] cache_tag;
   logic cache_present;
-  logic [7:0] cache_addr;
+  logic [CADDRSIZE-1:0] cache_addr;
   logic tag_wen;
 
   logic active;
 
   logic [1:0] addr_cnt;
-  logic [7:0] cache_waddr, cache_raddr;
+  logic [CADDRSIZE-1:0] cache_waddr, cache_raddr;
 
-  logic [24:0] addr_buff, curr_addr;
+  logic [ADDRSPACE-1:0] addr_buff, curr_addr;
 
-  logic [7:0] init_cntr;
+  logic [TADDRSIZE-1:0] init_cntr;
   logic init_mode, init_done;
-  logic [15:0] tag_din;
+  logic [TAGSIZE:0] tag_din;
 
 
-  assign addr_tag   = curr_addr[24:10];
-  assign addr_cline = curr_addr[9:2];
+  assign addr_tag   = curr_addr[TADDRSIZE+TAGSIZE+1:TADDRSIZE+2];
+  assign addr_cline = curr_addr[TADDRSIZE+1:2];
   assign addr_woff  = curr_addr[1:0];
 
   // Initialization FSM
@@ -60,7 +70,7 @@ module spi_cache (
       init_cntr <= init_cntr + 1;
     end
   end
-  assign init_done = init_mode & (init_cntr == 8'hFF);
+  assign init_done = init_mode & (init_cntr == {TADDRSIZE{1'b1}});
 
   // active register to track operations in progress
   always_ff @(posedge aclk) begin
@@ -76,31 +86,31 @@ module spi_cache (
     if (aresetn) begin
       addr_buff <= 0;
     end else if (!active & arvalid) begin
-      addr_buff <= araddr[24:0];
+      addr_buff <= araddr[ADDRSPACE-1:0];
     end
   end
 
-  assign curr_addr = active ? addr_buff : araddr;
+  assign curr_addr = active ? addr_buff : araddr[ADDRSPACE-1:0];
 
 
   // Main Cache Memory
-  dffram2_wrap main_cache (
+  dffram1024x32_wrap main_cache (
       .clk_i(aclk),
       .EN0(1'b1),
       .A0(cache_addr),
       .Di0(qspi_dout),
       .Do0(rdata),
-      .WE0({qspi_dval, qspi_dval})
+      .WE0({4{qspi_dval}})
   );
 
   // Tag Cache Memory
-  dffram_wrap tag_mem (
+  dffram256x16_wrap tag_mem (
       .clk_i(aclk),
       .EN0(1'b1),
       .A0(init_mode ? init_cntr : addr_cline),
       .Di0(tag_din),
       .Do0({cache_present, cache_tag}),
-      .WE0({tag_wen | init_mode , tag_wen | init_mode})
+      .WE0({2{tag_wen | init_mode}})
   );
 
   assign tag_din = init_mode ? 16'h0 : {1'b1, addr_tag};
@@ -116,7 +126,7 @@ module spi_cache (
 
   assign cache_addr = qspi_dval ? cache_waddr : cache_raddr;
   assign cache_raddr = {addr_cline, addr_woff};
-  assign cache_waddr = (addr_cline << 2) | addr_cnt;
+  assign cache_waddr = ({2'b0, addr_cline} << 2) | {8'b0, addr_cnt};
   assign tag_wen = (addr_cnt == 3) && qspi_dval;
 
   // QSPI assignments
@@ -126,7 +136,7 @@ module spi_cache (
       .i  (!cache_present & active),
       .o  (qspi_read_en)
   );
-  assign qspi_addr = {addr_tag, addr_cline} << 5;
+  assign qspi_addr = ({1'b0,addr_tag, addr_cline} << 5);
 
   // AXI assignments
   assign arready = !active && !init_mode && qspi_rready;
