@@ -13,7 +13,7 @@ logic clk;
 parameter WSIZE = 2;
 logic   [WSIZE-1:0]     WE0;     // FO: 2
 logic                   EN0;     // FO: 2
-logic   [9:0]           A0;      // FO: 5
+logic   [7:0]           A0;      // FO: 5
 logic   [(WSIZE*8-1):0] Di0;     // FO: 2
 logic  [(WSIZE*8-1):0]  Do0;
 
