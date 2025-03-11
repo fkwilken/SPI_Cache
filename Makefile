@@ -24,6 +24,7 @@ SIMULATOR := iverilog
 SIMULATOR_ARGS := -g2012
 SIMULATOR_BINARY := a.out
 SIMULATOR_SRCS := $(foreach src, $(RTL_SRCS), $(realpath $(src))) *.sv
+SIM_TOP := `$(shell pwd)/scripts/top.sh -s`
 # LINT_INCLUDES := ""
 endif
 # Gate Level Verification
@@ -76,7 +77,10 @@ lint_top:
 
 
 tests: $(TESTS) 
-tests/: $(TESTS)
+
+tests/%: FORCE
+	make -s $(subst /,, $(basename $*))
+
 itests: 
 	@ICARUS=1 make tests
 
@@ -95,7 +99,7 @@ $(TESTS):
 
 # Build With Simulator
 	@cd $(TEST_DIR)/$@;\
-		$(SIMULATOR) $(SIMULATOR_ARGS) $(SIMULATOR_SRCS) $(LINT_INCLUDES) > build.log
+		$(SIMULATOR) $(SIMULATOR_ARGS) $(SIMULATOR_SRCS) $(LINT_INCLUDES) $(SIM_TOP) > build.log
 	
 	@printf "\n$(BOLD) Running... $(RESET)\n"
 
