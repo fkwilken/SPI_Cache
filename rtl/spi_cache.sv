@@ -19,15 +19,15 @@ module spi_cache (
     input logic qspi_rready
 );
 
-localparam CLINES = 256;
-localparam CLINEWORDS=4;
-localparam CLINEOFFSET=$clog2(CLINEWORDS);
+  localparam CLINES = 256;
+  localparam CLINEWORDS = 4;
+  localparam CLINEOFFSET = $clog2(CLINEWORDS);
 
-localparam TADDRSIZE = $clog2(CLINES);
-localparam CADDRSIZE = $clog2(CLINES*CLINEWORDS);
-localparam TAGSIZE = 15;
+  localparam TADDRSIZE = $clog2(CLINES);
+  localparam CADDRSIZE = $clog2(CLINES * CLINEWORDS);
+  localparam TAGSIZE = 15;
 
-localparam ADDRSPACE = CADDRSIZE + TAGSIZE + CLINEOFFSET;
+  localparam ADDRSPACE = CADDRSIZE + TAGSIZE + CLINEOFFSET;
 
   logic [TAGSIZE-1:0] addr_tag;
   logic [TADDRSIZE-1:0] addr_cline;
@@ -136,10 +136,10 @@ localparam ADDRSPACE = CADDRSIZE + TAGSIZE + CLINEOFFSET;
       .i  (!cache_present & active),
       .o  (qspi_read_en)
   );
-  assign qspi_addr = ({1'b0,addr_tag, addr_cline} << 5);
+  assign qspi_addr = ({1'b0, addr_tag, addr_cline} << 5);
 
   // AXI assignments
-  assign arready = !active && !init_mode && qspi_rready;
+  assign arready = (!active || (rvalid && rready)) && !init_mode && qspi_rready;
   assign rvalid = cache_present & active;
   assign rresp = 0;
 
