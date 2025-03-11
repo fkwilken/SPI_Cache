@@ -1,0 +1,121 @@
+{
+    "DESIGN_NAME": "spi_cache_wrapper",
+    "VERILOG_FILES": "dir::rtl/*.sv",
+   
+    "CLOCK_PORT": "aclk",
+    "CLOCK_PERIOD": 8,
+   
+    "pdk::sky130A": {
+      "MAX_FANOUT_CONSTRAINT": 6,
+      "FP_CORE_UTIL": 40,
+      "PL_TARGET_DENSITY_PCT": "expr::($FP_CORE_UTIL + 10.0)",
+      "scl::sky130_fd_sc_hd": {
+        "CLOCK_PERIOD": 8.0
+      }
+    },
+
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [0, 0, 3000, 3500],
+    "//": "PDN configurations",
+    "FP_PDN_VOFFSET": 5,
+    "FP_PDN_HOFFSET": 5,
+    "FP_PDN_VWIDTH": 3.1,
+    "FP_PDN_HWIDTH": 3.1,
+    "FP_PDN_VSPACING": 15.5,
+    "FP_PDN_HSPACING": 15.5,
+    "FP_PDN_VPITCH": 50,
+    "FP_PDN_HPITCH": 50,
+    "QUIT_ON_PDN_VIOLATIONS": false,
+
+
+    "//": "Hardening strategy variables (this is for 3-Top-Level Integration). Visit https://docs.google.com/document/d/1pf-wbpgjeNEM-1TcvX2OJTkHjqH_C9p-LURCASS0Zo8 for more info",
+    "SYNTH_ELABORATE_ONLY": false,
+    "RUN_POST_GPL_DESIGN_REPAIR": true,
+    "RUN_POST_CTS_RESIZER_TIMING": true,
+    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": true,
+    "FP_PDN_ENABLE_RAILS": true,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_FILL_INSERTION": true,
+    "RUN_TAP_ENDCAP_INSERTION": true,
+    "RUN_CTS": true,
+    "RUN_IRDROP_REPORT": false,
+    
+    "VDD_NETS": [
+      "VPWR"
+  ],
+    "GND_NETS": [
+        "VGND"
+    ],
+
+    "MACROS": {
+      "RAM256x16": {
+          "instances": {
+          "cache.tag_mem.dffram0": {
+              "location": [100, 1600],
+              "orientation": "N"
+          }
+        },
+          "gds": [
+              "dir::macros/dffram256x16/gds/RAM256.gds"
+          ],
+          "lef": [
+              "dir::macros/dffram256x16/lef/RAM256.lef"
+          ],
+          "spef": {
+              "*": [
+                "dir::macros/dffram256x16/spef/max_/RAM256.max.spef"
+              ]
+          },
+          "lib": {
+              "*": "dir::macros/dffram256x16/lib/max_ss_100C_1v60/RAM256__max_ss_100C_1v60.lib"
+          },
+          "nl": [
+            "dir::macros/dffram256x16/nl/RAM256.nl.v"
+          ]
+      }, 
+      "RAM256": {
+          "instances": {
+          "cache.main_cache.dffram0": {
+              "location": [100, 100],
+              "orientation": "N"
+          },
+          "cache.main_cache.dffram1": {
+              "location": [100, 850],
+              "orientation": "FS"
+          },
+          "cache.main_cache.dffram2": {
+              "location": [1100, 100],
+              "orientation": "FN"
+          },
+          "cache.main_cache.dffram3": {
+              "location": [1100, 8500],
+              "orientation": "S"
+          }
+        },
+          "gds": [
+              "dir::macros/dffram256x32/gds/RAM256.gds"
+          ],
+          "lef": [
+              "dir::macros/dffram256x32/lef/RAM256.lef"
+          ],
+          "spef": {
+              "*": [
+                "dir::macros/dffram256x32/spef/max_/RAM256.max.spef"
+              ]
+          },
+          "lib": {
+              "*": "dir::macros/dffram256x32/lib/max_ss_100C_1v60/RAM256__max_ss_100C_1v60.lib"
+          },
+          "nl": [
+            "dir::macros/dffram256x32/nl/RAM256.nl.v"
+          ]
+      }
+     },
+     "PDN_MACRO_CONNECTIONS": [
+        "cache.tag_mem.dffram0 VPWR VGND VPWR VGND",
+        "cache.main_cache.ram0 VPWR VGND VPWR VGND",
+        "cache.main_cache.ram1 VPWR VGND VPWR VGND",
+        "cache.main_cache.ram2 VPWR VGND VPWR VGND",
+        "cache.main_cache.ram3 VPWR VGND VPWR VGND"
+      ]
+  }
