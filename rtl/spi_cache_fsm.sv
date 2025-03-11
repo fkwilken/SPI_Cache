@@ -21,6 +21,7 @@ module spi_cache_fsm (
   end
 
   always_comb begin
+    init_mode = 1'b0;
     case (curr_state)
       Init: begin
         if (init_done) begin

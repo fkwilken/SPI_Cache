@@ -43,6 +43,7 @@ module qspi_fsm (
   end
 
   always_comb begin
+    next_state = curr_state;
     cmd_out = CmdReset;
     cmd_we = 0;
     cs = 1;
