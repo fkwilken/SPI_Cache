@@ -35,28 +35,30 @@ always_ff @ (posedge clk_i) begin
 end
 
 
-RAM256 dffram0  (
+RAM256 `ifndef __pnr_ #(1,4) `endif
+dffram0  
+(
 `ifdef USE_POWER_PINS
     .VPWR(VPWR),
     .VGND(VGND),
 `endif
   .CLK(clk_i), .A0(A0[7:0]), .Di0(Di0), .WE0(WE0),
    .EN0(EN0 & (select == 0)), .Do0(Do0_vec[0]));
-RAM256 dffram1  (
+RAM256 `ifndef __pnr_ #(1,4) `endif dffram1  (
 `ifdef USE_POWER_PINS
     .VPWR(VPWR),
     .VGND(VGND),
 `endif
   .CLK(clk_i), .A0(A0[7:0]), .Di0(Di0), .WE0(WE0),
    .EN0(EN0 & (select == 1)), .Do0(Do0_vec[1]));
-RAM256 dffram2  (
+RAM256 `ifndef __pnr_ #(1,4) `endif dffram2  (
 `ifdef USE_POWER_PINS
     .VPWR(VPWR),
     .VGND(VGND),
 `endif  
   .CLK(clk_i), .A0(A0[7:0]), .Di0(Di0), .WE0(WE0),
    .EN0(EN0 & (select == 2)), .Do0(Do0_vec[2]));
-RAM256 dffram3  (
+RAM256 `ifndef __pnr_ #(1,4) `endif dffram3  (
 `ifdef USE_POWER_PINS
     .VPWR(VPWR),
     .VGND(VGND),

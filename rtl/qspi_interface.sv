@@ -8,7 +8,10 @@ module qspi_interface (
     output logic [31:0] dout,
     output logic dval,
     output logic rready,
-    inout logic [3:0] io,
+    // inout logic [3:0] io,
+    input [3:0] in,
+    output logic [3:0] out,
+    output logic [3:0] oe,
     output logic csb
 );
 
@@ -26,7 +29,22 @@ module qspi_interface (
   logic data_se, data_se1;
 
   // tristate mux (didn't work with case statement)
-  assign io = (out_mux == 0) ? 4'hz : (out_mux == 1) ? {3'hz, cmd_out} : addr_out;
+  // assign io = (out_mux == 0) ? 4'hz : (out_mux == 1) ? {3'hz, cmd_out} : addr_out;
+  always_comb begin: spiout
+    oe = 0;
+    out = 0;
+  case (out_mux)
+    0: oe = 0;
+    1: begin 
+      oe = {3'b0, 1'b1};
+      out = {3'b0, cmd_out};
+    end
+    default: begin
+      oe = {4'b1111};
+      out = addr_out;
+    end
+  endcase
+  end
 
   qspi_fsm fsm (
       .clk(clk),
@@ -97,7 +115,7 @@ module qspi_interface (
       dout <= 32'h0;
     end else if (data_se) begin
       // switches the byte ordering (in a rather convoluted way admitedly)
-      dout[(timer[2:0]^1)*4+:4] <= io;
+      dout[(timer[2:0]^1)*4+:4] <= in;
     end
     data_se1 <= data_se;
   end

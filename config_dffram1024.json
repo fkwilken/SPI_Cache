@@ -4,6 +4,9 @@
    
     "CLOCK_PORT": "clk_i",
     "CLOCK_PERIOD": 30,
+
+    "VERILOG_POWER_DEFINE": "USE_POWER_PINS",
+
     "PL_RESIZER_ALLOW_SETUP_VIOS": true,
     "GRT_RESIZER_ALLOW_SETUP_VIOS": true,
     "GRT_ANTENNA_ITERS": 10,

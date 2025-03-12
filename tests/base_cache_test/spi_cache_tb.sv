@@ -12,6 +12,16 @@ module spi_cache_tb ();
   logic rresp;  // TODO: set bit width of this signal
 
   wire [3:0] io;
+  wire [3:0] in;
+  wire [3:0] out;
+  wire [3:0] oe;
+
+  assign in = io;
+  assign io[0] = oe[0] ? out[0] : 1'bz;
+  assign io[1] = oe[1] ? out[1] : 1'bz;
+  assign io[2] = oe[2] ? out[2] : 1'bz;
+  assign io[3] = oe[3] ? out[3] : 1'bz;
+
   logic csb;
 
   localparam int ClkPeriod = 20;

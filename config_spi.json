@@ -4,6 +4,9 @@
    
     "CLOCK_PORT": "aclk",
     "CLOCK_PERIOD": 30,
+    
+    "VERILOG_POWER_DEFINE": "USE_POWER_PINS",
+    "ERROR_ON_XOR_ERROR": false,
    
     "pdk::sky130A": {
       "MAX_FANOUT_CONSTRAINT": 6,

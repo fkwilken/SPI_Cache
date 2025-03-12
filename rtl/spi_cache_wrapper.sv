@@ -14,7 +14,10 @@ module spi_cache_wrapper (
     output logic [31:0] rdata,
     output logic rresp,  // TODO: set bit width of this signal
 
-    inout [3:0] io,
+    // inout [3:0] io,
+    input [3:0] in,
+    output logic [3:0] out,
+    output logic [3:0] oe,
     output logic csb
 );
 
@@ -53,7 +56,9 @@ module spi_cache_wrapper (
       .dout(qspi_dout),
       .dval(qspi_dval),
       .rready(qspi_rready),
-      .io(io),
+      .in(in),
+      .out(out),
+      .oe(oe),
       .csb(csb)
   );
 

@@ -9,7 +9,7 @@ module RAM256model #(parameter   USE_LATCH=1,
     output  logic [(WSIZE*8-1):0] Do0
 );
 
-logic [15:0] mem [255:0] ;
+logic [15:0] mem [255:0];
 
 always_ff @ (posedge CLK) begin
     if (EN0) begin
