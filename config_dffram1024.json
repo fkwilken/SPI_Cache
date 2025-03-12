@@ -35,8 +35,8 @@
     "FP_PDN_HWIDTH": 3.1,
     "FP_PDN_VSPACING": 15.5,
     "FP_PDN_HSPACING": 15.5,
-    "FP_PDN_VPITCH": 50,
-    "FP_PDN_HPITCH": 50,
+    "FP_PDN_VPITCH": 100,
+    "FP_PDN_HPITCH": 100,
     "QUIT_ON_PDN_VIOLATIONS": false,
 
     "FP_PDN_CORE_RING": true,
@@ -96,6 +96,9 @@
           },
           "nl": [
             "dir::macros/dffram256x32/nl/RAM256.nl.v"
+          ],
+          "pnl": [
+            "dir::macros/dffram256x32/pnl/RAM256.pnl.v"
           ]
       }
      },

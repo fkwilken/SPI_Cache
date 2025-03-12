@@ -3,19 +3,30 @@
     "VERILOG_FILES": "dir::rtl/*.sv",
    
     "CLOCK_PORT": "aclk",
-    "CLOCK_PERIOD": 20,
+    "CLOCK_PERIOD": 30,
    
     "pdk::sky130A": {
       "MAX_FANOUT_CONSTRAINT": 6,
       "FP_CORE_UTIL": 40,
       "PL_TARGET_DENSITY_PCT": "expr::($FP_CORE_UTIL + 10.0)",
       "scl::sky130_fd_sc_hd": {
-        "CLOCK_PERIOD": 20.0
+        "CLOCK_PERIOD": 30.0
       }
     },
+    "PL_RESIZER_ALLOW_SETUP_VIOS": true,
+    "GRT_RESIZER_ALLOW_SETUP_VIOS": true,
+    "GRT_ANTENNA_ITERS": 10,
+    "GRT_ANTENNA_MARGIN": 15,
+    "RUN_HEURISTIC_DIODE_INSERTION": true,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
+    "RUN_POST_GRT_DESIGN_REPAIR": true,
+    "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
+    "DESIGN_REPAIR_MAX_CAP_PCT": 30,
+    "MAX_TRANSITION_CONSTRAINT": 1.5,
 
     "FP_SIZING": "absolute",
-    "DIE_AREA": [0, 0, 3000, 3500],
+    "DIE_AREA": [0, 0, 2300, 2300],
     "//": "PDN configurations",
     "FP_PDN_VOFFSET": 5,
     "FP_PDN_HOFFSET": 5,
@@ -23,9 +34,10 @@
     "FP_PDN_HWIDTH": 3.1,
     "FP_PDN_VSPACING": 15.5,
     "FP_PDN_HSPACING": 15.5,
-    "FP_PDN_VPITCH": 70,
-    "FP_PDN_HPITCH": 70,
+    "FP_PDN_VPITCH": 50,
+    "FP_PDN_HPITCH": 50,
     "QUIT_ON_PDN_VIOLATIONS": false,
+    "FP_PDN_CHECK_NODES": false,
 
 
     "//": "Hardening strategy variables (this is for 3-Top-Level Integration). Visit https://docs.google.com/document/d/1pf-wbpgjeNEM-1TcvX2OJTkHjqH_C9p-LURCASS0Zo8 for more info",
@@ -51,7 +63,7 @@
       "RAM256": {
           "instances": {
           "cache.tag_mem.dffram0": {
-              "location": [200, 1700],
+              "location": [100, 1700],
               "orientation": "N"
           }
         },
@@ -71,12 +83,15 @@
           },
           "nl": [
             "dir::macros/dffram256x16/nl/RAM256.nl.v"
+          ],
+          "pnl": [
+            "dir::macros/dffram256x16/pnl/RAM256.pnl.v"
           ]
       }, 
       "dffram1024x32_wrap": {
           "instances": {
           "cache.main_cache": {
-              "location": [200, 200],
+              "location": [100, 100],
               "orientation": "N"
           }
         },
@@ -96,6 +111,9 @@
           },
           "nl": [
             "dir::macros/dffram1024x32/nl/dffram1024x32_wrap.nl.v"
+          ],
+          "pnl": [
+            "dir::macros/dffram1024x32/pnl/dffram1024x32_wrap.pnl.v"
           ]
       }
      },
