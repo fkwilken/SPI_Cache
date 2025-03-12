@@ -1,4 +1,8 @@
 module spi_cache_wrapper (
+`ifdef USE_POWER_PINS
+    inout VPWR,
+    inout VGND,
+`endif
     input logic aclk,
     input logic aresetn,
     input logic arvalid,
@@ -21,6 +25,10 @@ module spi_cache_wrapper (
   logic qspi_rready;
 
   spi_cache cache (
+`ifdef USE_POWER_PINS
+    .VPWR(VPWR),
+    .VGND(VGND),
+`endif
       .aclk(aclk),
       .aresetn(aresetn),
       .arvalid(arvalid),

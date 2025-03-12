@@ -1,4 +1,8 @@
 module spi_cache (
+`ifdef USE_POWER_PINS
+    inout VPWR,
+    inout VGND,
+`endif
     // AXI Interface
     input logic aclk,
     input logic aresetn,
@@ -95,6 +99,10 @@ module spi_cache (
 
   // Main Cache Memory
   dffram1024x32_wrap main_cache (
+`ifdef USE_POWER_PINS
+    .VPWR(VPWR),
+    .VGND(VGND),
+`endif
       .clk_i(aclk),
       .EN0(1'b1),
       .A0(cache_addr),
@@ -105,6 +113,10 @@ module spi_cache (
 
   // Tag Cache Memory
   dffram256x16_wrap tag_mem (
+`ifdef USE_POWER_PINS
+    .VPWR(VPWR),
+    .VGND(VGND),
+`endif
       .clk_i(aclk),
       .EN0(1'b1),
       .A0(init_mode ? init_cntr : addr_cline),
